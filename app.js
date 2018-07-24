@@ -3,9 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var models = require('./models');
+const passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+require('./config/passport');
 
 var app = express();
 
@@ -18,6 +22,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -37,5 +48,13 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
+
+models.sequelize.sync().then(function() {
+  console.log("nah, you good..keep codin")
+});
+
 
 module.exports = app;
