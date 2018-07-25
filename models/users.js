@@ -22,9 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    Deleted: DataTypes.BOOLEAN,
     createdAt: DataTypes.DATE, 
     updatedAt: DataTypes.DATE
-  }, {}
+  }, {
+  }
 );
   users.associate = function(models) {
     // associations can be defined here

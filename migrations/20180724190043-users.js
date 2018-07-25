@@ -36,10 +36,14 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      Deleted: {
+        allowNull: true,
+        type: Sequelize.BOOLEAN
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('users', 'Deleted');
   }
 };

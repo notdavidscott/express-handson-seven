@@ -64,10 +64,65 @@ router.post('/login', passport.authenticate('local', {
       } 
     ); 
 
-    
+
     router.get('/logout', function(req, res) {
       req.logout();
       res.redirect('/users/login');
     });
+
+/////ADMIN SECTION //on index
+
+router.get('/', (req, res, next) => {
+
+  models.users
+  .findAll({
+    where: {
+      Deleted: null
+    }
+  })
+      .then(usersFound => {
+    res.render('users', {
+      users: usersFound
+    });
+  });
+});
+
+router.get('/:id', (req, res) => {
+  let userId = req.params.id;
+  models.users
+  .find({
+    where: 
+    {
+      UserId: userId
+    },
+  })
+  .then(user => {
+    res.render('specificUser', {
+      UserId: user.UserId,
+      Username: user.Username,
+      FirstName: user.FirstName,
+      LastName: user.LastName, 
+      Email: user.Email
+    });
+  });
+});
+
+router.delete('/:id/delete', (req, res) => {
+  let userId = parseInt(req.params.id);
+  models.users
+  .update(
+    {
+      Deleted: 'true'
+    },
+    {
+      where: {
+       UserId: userId
+      }
+    }
+  )
+  .then(user => {
+    res.redirect('/users');
+  });
+});
 
 module.exports = router;

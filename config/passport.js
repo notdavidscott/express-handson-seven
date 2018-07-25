@@ -35,6 +35,34 @@ passport.use(
     })
     );
 
+    passport.use(
+        'local',
+        new LocalStrategy(function(username, password, done) {
+            models.users
+            .findOne({
+                where: {
+                    Admin: true
+                }
+            })
+            .then(user => {
+                if (!user) {
+                    console.log('not a user');
+                    return done(null, false, {
+                        message: 'Incorrect Username'
+                    });
+                }
+            
+            return done(null, user);
+            })
+            .catch(err => {
+                if (err) {
+                    console.log('error');
+                    return done(err);
+                }
+            });
+        })
+        );
+
     passport.serializeUser((user, cb) => {
         cb(null, user.UserId);
     });
